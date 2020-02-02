@@ -41,12 +41,14 @@
 
 from random import randrange as rand
 import pygame, sys
+import TetrisAI
 
 # The configuration
 cell_size =	18
 cols =		10
 rows =		22
 maxfps = 	30
+
 
 colors = [
 (0,   0,   0  ),
@@ -62,31 +64,14 @@ colors = [
 
 # Define the shapes of the single parts
 tetris_shapes = [
-	[[1, 1, 1],
-	 [0, 1, 0]],
-	
-	[[0, 2, 2],
-	 [2, 2, 0]],
-	
-	[[3, 3, 0],
-	 [0, 3, 3]],
-	
 	[[4, 0, 0],
 	 [4, 4, 4]],
-	
-	[[0, 0, 5],
-	 [5, 5, 5]],
-	
-	[[6, 6, 6, 6]],
-	
-	[[7, 7],
-	 [7, 7]]
 ]
 
 def rotate_clockwise(shape):
 	return [ [ shape[y][x]
-			for y in xrange(len(shape)) ]
-		for x in xrange(len(shape[0]) - 1, -1, -1) ]
+			for y in range(len(shape)) ]
+		for x in range(len(shape[0]) - 1, -1, -1) ]
 
 def check_collision(board, shape, offset):
 	off_x, off_y = offset
@@ -101,7 +86,7 @@ def check_collision(board, shape, offset):
 
 def remove_row(board, row):
 	del board[row]
-	return [[0 for i in xrange(cols)]] + board
+	return [[0 for i in range(cols)]] + board
 	
 def join_matrixes(mat1, mat2, mat2_off):
 	off_x, off_y = mat2_off
@@ -111,20 +96,20 @@ def join_matrixes(mat1, mat2, mat2_off):
 	return mat1
 
 def new_board():
-	board = [ [ 0 for x in xrange(cols) ]
-			for y in xrange(rows) ]
-	board += [[ 1 for x in xrange(cols)]]
+	board = [ [ 0 for x in range(cols) ]
+			for y in range(rows) ]
+	board += [[ 1 for x in range(cols)]]
 	return board
 
 class TetrisApp(object):
-	def __init__(self):
+	def __init__(self, player):
 		pygame.init()
 		pygame.key.set_repeat(250,25)
 		self.width = cell_size*(cols+6)
 		self.height = cell_size*rows
 		self.rlim = cell_size*cols
-		self.bground_grid = [[ 8 if x%2==y%2 else 0 for x in xrange(cols)] for y in xrange(rows)]
-		
+		self.bground_grid = [[ 8 if x%2==y%2 else 0 for x in range(cols)] for y in range(rows)]
+		self.player = player
 		self.default_font =  pygame.font.Font(
 			pygame.font.get_default_font(), 12)
 		
@@ -312,6 +297,12 @@ Press space to continue""" % self.score)
 						(cols+1,2))
 			pygame.display.update()
 			
+
+			AIenter = pygame.USEREVENT+2
+			my_event = pygame.event.Event(AIenter, value=self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover))
+			pygame.event.post(my_event)
+
+
 			for event in pygame.event.get():
 				if event.type == pygame.USEREVENT+1:
 					self.drop(False)
@@ -322,9 +313,14 @@ Press space to continue""" % self.score)
 						if event.key == eval("pygame.K_"
 						+key):
 							key_actions[key]()
+				elif event.type == pygame.USEREVENT+2:
+					key_actions[event.value]()
 					
 			dont_burn_my_cpu.tick(maxfps)
 
 if __name__ == '__main__':
-	App = TetrisApp()
+	Player = TetrisAI.tetrisplayer(1)
+	
+	App = TetrisApp(Player)
+	
 	App.run()
