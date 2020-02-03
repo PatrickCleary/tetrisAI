@@ -63,10 +63,33 @@ colors = [
 ]
 
 # Define the shapes of the single parts
+tetris_rotations = [
+	4, 2, 2, 4, 4, 2, 1
+
+]
+
 tetris_shapes = [
+
+[[1, 1, 1],
+	 [0, 1, 0]],
+	
+	[[0, 2, 2],
+	 [2, 2, 0]],
+	
+	[[3, 3, 0],
+	 [0, 3, 3]],
+	
 	[[4, 0, 0],
 	 [4, 4, 4]],
-]
+	
+	[[0, 0, 5],
+	 [5, 5, 5]],
+	
+	[[6, 6, 6, 6]],
+
+    [[7,7],[7,7]]
+
+	]
 
 def rotate_clockwise(shape):
 	return [ [ shape[y][x]
@@ -297,10 +320,10 @@ Press space to continue""" % self.score)
 						(cols+1,2))
 			pygame.display.update()
 			
-
-			AIenter = pygame.USEREVENT+2
-			my_event = pygame.event.Event(AIenter, value=self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover))
-			pygame.event.post(my_event)
+			if(self.player):
+				AIenter = pygame.USEREVENT+2
+				my_event = pygame.event.Event(AIenter, value=self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover))
+				pygame.event.post(my_event)
 
 
 			for event in pygame.event.get():
@@ -313,14 +336,16 @@ Press space to continue""" % self.score)
 						if event.key == eval("pygame.K_"
 						+key):
 							key_actions[key]()
+							print(self.stone, self.stone_x, self.stone_y)
+
 				elif event.type == pygame.USEREVENT+2:
 					key_actions[event.value]()
 					
 			dont_burn_my_cpu.tick(maxfps)
 
 if __name__ == '__main__':
-	Player = TetrisAI.tetrisplayer(1)
+	Player = TetrisAI.tetrisplayer()
 	
-	App = TetrisApp(Player)
+	App = TetrisApp(None)
 	
 	App.run()
