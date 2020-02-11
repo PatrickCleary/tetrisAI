@@ -68,6 +68,8 @@ tetris_rotations = [
 
 ]
 
+
+
 tetris_shapes = [
 
 [[1, 1, 1],
@@ -321,12 +323,26 @@ Press space to continue""" % self.score)
 			pygame.display.update()
 			
 			if(self.player):
-				AIenter = pygame.USEREVENT+2
-				my_event = pygame.event.Event(AIenter, value=self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover))
+				AIenter = pygame.USEREVENT
+				moves = self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover)
+				print(moves)
+
+				for i in range(abs(moves[0])):
+					if(moves[0]>0):
+						my_event = pygame.event.Event(AIenter, value='RIGHT')
+						pygame.event.post(my_event)
+					else:
+						my_event = pygame.event.Event(AIenter, value='LEFT')
+						pygame.event.post(my_event)
+				for i in range(moves[1]):
+					my_event = pygame.event.Event(AIenter, value='UP')
+					pygame.event.post(my_event)
+				my_event = pygame.event.Event(AIenter, value = 'ENTER')
 				pygame.event.post(my_event)
 
 
 			for event in pygame.event.get():
+				print(event)
 				if event.type == pygame.USEREVENT+1:
 					self.drop(False)
 				elif event.type == pygame.QUIT:
@@ -346,6 +362,6 @@ Press space to continue""" % self.score)
 if __name__ == '__main__':
 	Player = TetrisAI.tetrisplayer()
 	
-	App = TetrisApp(None)
+	App = TetrisApp(Player)
 	
 	App.run()
