@@ -323,7 +323,7 @@ Press space to continue""" % self.score)
 			pygame.display.update()
 			
 			if(self.player):
-				AIenter = pygame.USEREVENT
+				AIenter = pygame.USEREVENT+2
 				moves = self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover)
 				print(moves)
 
@@ -337,7 +337,7 @@ Press space to continue""" % self.score)
 				for i in range(moves[1]):
 					my_event = pygame.event.Event(AIenter, value='UP')
 					pygame.event.post(my_event)
-				my_event = pygame.event.Event(AIenter, value = 'ENTER')
+				my_event = pygame.event.Event(AIenter, value = 'RETURN')
 				pygame.event.post(my_event)
 
 

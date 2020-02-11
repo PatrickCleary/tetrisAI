@@ -13,21 +13,13 @@ class tetrisplayer(object):
     def decidemove(self, board, stone, stonex, stoney, gameover):
         maxMove = self.getMoves(board, stone)
         numiters = maxMove[1]-4
+        if gameover:
+            return 'SPACE'
+       
         return (numiters, maxMove[2])
 
         score = maxMove[0]
-        if gameover:
-            return 'SPACE'
-        if(score<.2):
-            return 'UP'
-        if(score<.4):
-            return 'DOWN'
-        if(score<.6):
-            return 'RIGHT'
-        if(score<.8):
-            return 'LEFT'
-        else:
-            return 'UP'
+       
 
     def scoreBoard(self, board):
 
