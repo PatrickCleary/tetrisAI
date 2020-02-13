@@ -36,7 +36,6 @@ class tetrisplayer(object):
         numiters = maxMove[1]-3
         if gameover:
             return (1000, 1000)
-        print(numiters, maxMove[2])
         return (numiters, maxMove[2])
 
         score = maxMove[0]
@@ -50,8 +49,6 @@ class tetrisplayer(object):
                 if value != 0:
                     summation+=1
             rowvalues[i] = summation
-        self.printboard(board)
-        print(max(rowvalues))
         return max(rowvalues)
 
     def drop(self, board, stone, stonex, stoney):
@@ -68,18 +65,18 @@ class tetrisplayer(object):
 
     def getMoves(self, board, stone):
         maxMove = (0, 0, 0)
-        time.sleep(1)
         for value in stone[0]:
             if(value > 0):
                 shapeNum = value
-        for i in range(12):
-            print('i', i)
+        for i in range(10):
             stonex = i
             stoney = 0
             for j in range(tetris.tetris_rotations[shapeNum-1]):
+
                 newBoard = copy.deepcopy(board)
                 if(check_collision(newBoard,stone,(stonex,stoney))):
-                    print('outie')
+                    print('collide')
+                    print(stonex, stoney)
                     continue
                 newBoard = self.drop(newBoard, stone, stonex, stoney)
                 score = self.scoreBoard(newBoard)

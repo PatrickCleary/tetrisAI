@@ -67,7 +67,10 @@ tetris_rotations = [
 	4, 2, 2, 4, 4, 2, 1
 
 ]
-
+def printboard(self, board):
+        for row in board:
+            print(row)
+        pass
 
 
 tetris_shapes = [
@@ -358,7 +361,8 @@ Press space to continue""" % self.score)
 						if event.key == eval("pygame.K_"
 						+key):
 							key_actions[key]()
-							print(self.stone, self.stone_x, self.stone_y)
+							print(self.stone_x, self.stone_y)
+							print(check_collision(self.board, self.stone, (self.stone_x,self.stone_y)))
 
 				elif event.type == pygame.USEREVENT+2:
 					key_actions[event.value]()
