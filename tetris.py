@@ -333,6 +333,7 @@ Press space to continue""" % self.score)
 					pygame.event.post(my_event)
 				else:
 					for i in range(abs(moves[0])):
+						print('left/right:', i)
 						if(moves[0]>0):
 							my_event = pygame.event.Event(AIenter, value='RIGHT')
 							pygame.event.post(my_event)
@@ -340,6 +341,7 @@ Press space to continue""" % self.score)
 							my_event = pygame.event.Event(AIenter, value='LEFT')
 							pygame.event.post(my_event)
 					for i in range(moves[1]):
+						print('rotate', i)
 						my_event = pygame.event.Event(AIenter, value='UP')
 						pygame.event.post(my_event)
 					my_event = pygame.event.Event(AIenter, value = 'RETURN')

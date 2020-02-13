@@ -33,10 +33,10 @@ class tetrisplayer(object):
     
     def decidemove(self, board, stone, stonex, stoney, gameover):
         maxMove = self.getMoves(board, stone)
-        numiters = maxMove[1]-4
+        numiters = maxMove[1]-3
         if gameover:
             return (1000, 1000)
-       
+        print(numiters, maxMove[2])
         return (numiters, maxMove[2])
 
         score = maxMove[0]
@@ -50,37 +50,42 @@ class tetrisplayer(object):
                 if value != 0:
                     summation+=1
             rowvalues[i] = summation
+        self.printboard(board)
+        print(max(rowvalues))
         return max(rowvalues)
 
-    def drop(self, board, stone, stoney, stonex):
+    def drop(self, board, stone, stonex, stoney):
         stoney+=1
         if check_collision(board, stone, (stonex, stoney)):
             return join_matrixes(board, stone, (stonex, stoney))
         else:
-            return self.drop(board, stone, stoney, stonex)
+            return self.drop(board, stone, stonex, stoney)
         
+    def printboard(self, board):
+        for row in board:
+            print(row)
+        pass
 
     def getMoves(self, board, stone):
         maxMove = (0, 0, 0)
-        
+        time.sleep(1)
         for value in stone[0]:
             if(value > 0):
                 shapeNum = value
-        for i in range(8):
-            if(shapeNum == 6 and i == 7):
-                continue
+        for i in range(12):
+            print('i', i)
             stonex = i
             stoney = 0
             for j in range(tetris.tetris_rotations[shapeNum-1]):
-                stone = tetris.rotate_clockwise(stone)
                 newBoard = copy.deepcopy(board)
                 if(check_collision(newBoard,stone,(stonex,stoney))):
+                    print('outie')
                     continue
-                newBoard = self.drop(newBoard, stone, stonex,stoney)
-                print("hello!!!", i, j, newBoard)
+                newBoard = self.drop(newBoard, stone, stonex, stoney)
                 score = self.scoreBoard(newBoard)
                 if(score > maxMove[0]):
                     maxMove = (score, i, j)
+                stone = tetris.rotate_clockwise(stone)
         return maxMove
 
     def printInfo(self):
