@@ -293,6 +293,7 @@ class TetrisApp(object):
 			'SPACE':	self.start_game,
 			'RETURN':	self.insta_drop
 		}
+		print(check_collision(self.board,tetris_shapes[1], (7, 0)))
 		
 		self.gameover = False
 		self.paused = False
@@ -329,13 +330,13 @@ Press space to continue""" % self.score)
 				
 				AIenter = pygame.USEREVENT+2
 				moves = self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover)
-
+				numMoves = abs(self.stone_x-moves[0])
 
 				if(moves[0] == 1000):
 					my_event= pygame.event.Event(AIenter, value = 'SPACE')
 					pygame.event.post(my_event)
 				else:
-					for i in range(abs(moves[0])):
+					for i in range(numMoves):
 						print('left/right:', i)
 						if(moves[0]>0):
 							my_event = pygame.event.Event(AIenter, value='RIGHT')
@@ -373,5 +374,5 @@ if __name__ == '__main__':
 	Player = TetrisAI.tetrisplayer()
 	
 	App = TetrisApp(Player)
-	
 	App.run()
+	

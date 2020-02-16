@@ -28,17 +28,15 @@ class tetrisplayer(object):
         self.nextMove = None
 
     def getmove(self, board, stone, stonex, stoney, gameover):
-        time.sleep(1)
         return self.decidemove(board, stone, stonex, stoney, gameover)
     
     def decidemove(self, board, stone, stonex, stoney, gameover):
         maxMove = self.getMoves(board, stone)
-        numiters = maxMove[1]-3
+        print(maxMove)
         if gameover:
             return (1000, 1000)
-        return (numiters, maxMove[2])
+        return (maxMove[1], maxMove[2])
 
-        score = maxMove[0]
        
 
     def scoreBoard(self, board):
@@ -65,6 +63,7 @@ class tetrisplayer(object):
 
     def getMoves(self, board, stone):
         maxMove = (0, 0, 0)
+        score = 0
         for value in stone[0]:
             if(value > 0):
                 shapeNum = value
@@ -72,12 +71,11 @@ class tetrisplayer(object):
             stonex = i
             stoney = 0
             for j in range(tetris.tetris_rotations[shapeNum-1]):
-
                 newBoard = copy.deepcopy(board)
-                if(check_collision(newBoard,stone,(stonex,stoney))):
-                    print('collide')
-                    print(stonex, stoney)
+                if i > 10 - len(stone[0]):
+                    stone = tetris.rotate_clockwise(stone)
                     continue
+                
                 newBoard = self.drop(newBoard, stone, stonex, stoney)
                 score = self.scoreBoard(newBoard)
                 if(score > maxMove[0]):
