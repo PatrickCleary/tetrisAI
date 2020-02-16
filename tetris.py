@@ -159,7 +159,12 @@ class TetrisApp(object):
 		                   self.stone,
 		                   (self.stone_x, self.stone_y)):
 			self.gameover = True
-	
+		nextstone = pygame.USEREVENT+3
+		my_event= pygame.event.Event(nextstone, value = 'nextstone')
+		pygame.event.post(my_event)
+
+
+
 	def init_game(self):
 		self.board = new_board()
 		self.new_stone()
@@ -247,6 +252,8 @@ class TetrisApp(object):
 				  self.stone,
 				  (self.stone_x, self.stone_y))
 				self.new_stone()
+				
+
 				cleared_rows = 0
 				while True:
 					for i, row in enumerate(self.board[:-1]):
@@ -281,7 +288,31 @@ class TetrisApp(object):
 		if self.gameover:
 			self.init_game()
 			self.gameover = False
-	
+
+	def AImove(self):
+		AIenter = pygame.USEREVENT+2
+		moves = self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover)
+		numMoves = abs(self.stone_x-moves[0])
+		if(moves[0] == 1000):
+			my_event= pygame.event.Event(AIenter, value = 'SPACE')
+			pygame.event.post(my_event)
+		else:
+			for i in range(numMoves):
+				print('left/right:', i, 'moves:', numMoves)
+				if(moves[0]>0):
+					my_event = pygame.event.Event(AIenter, value='RIGHT')
+					pygame.event.post(my_event)
+				else:
+					my_event = pygame.event.Event(AIenter, value='LEFT')
+					pygame.event.post(my_event)
+			for i in range(moves[1]):
+				print('rotate', i)
+				my_event = pygame.event.Event(AIenter, value='UP')
+				pygame.event.post(my_event)
+			#my_event = pygame.event.Event(AIenter, value = 'RETURN')
+			#pygame.event.post(my_event)
+		numMoves =0
+
 	def run(self):
 		key_actions = {
 			'ESCAPE':	self.quit,
@@ -293,12 +324,12 @@ class TetrisApp(object):
 			'SPACE':	self.start_game,
 			'RETURN':	self.insta_drop
 		}
-		print(check_collision(self.board,tetris_shapes[1], (7, 0)))
 		
 		self.gameover = False
 		self.paused = False
 		
 		dont_burn_my_cpu = pygame.time.Clock()
+		
 		while 1:
 			self.screen.fill((0,0,0))
 			if self.gameover:
@@ -324,35 +355,12 @@ Press space to continue""" % self.score)
 						(self.stone_x, self.stone_y))
 					self.draw_matrix(self.next_stone,
 						(cols+1,2))
-			pygame.display.update()
-			
-			if(self.player):
-				
-				AIenter = pygame.USEREVENT+2
-				moves = self.player.getmove(self.board, self.stone, self.stone_x, self.stone_y, self.gameover)
-				numMoves = abs(self.stone_x-moves[0])
-
-				if(moves[0] == 1000):
-					my_event= pygame.event.Event(AIenter, value = 'SPACE')
-					pygame.event.post(my_event)
-				else:
-					for i in range(numMoves):
-						print('left/right:', i)
-						if(moves[0]>0):
-							my_event = pygame.event.Event(AIenter, value='RIGHT')
-							pygame.event.post(my_event)
-						else:
-							my_event = pygame.event.Event(AIenter, value='LEFT')
-							pygame.event.post(my_event)
-					for i in range(moves[1]):
-						print('rotate', i)
-						my_event = pygame.event.Event(AIenter, value='UP')
-						pygame.event.post(my_event)
-					my_event = pygame.event.Event(AIenter, value = 'RETURN')
-					pygame.event.post(my_event)
+			pygame.display.update()		
 
 
 			for event in pygame.event.get():
+				print(event)
+
 				if event.type == pygame.USEREVENT+1:
 					self.drop(False)
 				elif event.type == pygame.QUIT:
@@ -362,12 +370,12 @@ Press space to continue""" % self.score)
 						if event.key == eval("pygame.K_"
 						+key):
 							key_actions[key]()
-							print(self.stone_x, self.stone_y)
-							print(check_collision(self.board, self.stone, (self.stone_x,self.stone_y)))
 
 				elif event.type == pygame.USEREVENT+2:
 					key_actions[event.value]()
-					
+				elif event.type == pygame.USEREVENT+3:
+					if(self.player):
+						self.AImove()
 			dont_burn_my_cpu.tick(maxfps)
 
 if __name__ == '__main__':
