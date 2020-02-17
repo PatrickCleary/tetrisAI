@@ -2,6 +2,7 @@ import random
 import tetris
 import time
 import copy
+import strategies
 
 def check_collision(board, shape, offset):
 	off_x, off_y = offset
@@ -23,9 +24,8 @@ def join_matrixes(mat1, mat2, mat2_off):
 
 class tetrisplayer(object):
 
-    def __init__(self):
-        self.policy = ""    
-        self.nextMove = None
+    def __init__(self, strategist):
+        self.strategist = strategist    
 
     def getmove(self, board, stone, stonex, stoney, gameover):
         return self.decidemove(board, stone, stonex, stoney, gameover)
@@ -38,23 +38,7 @@ class tetrisplayer(object):
 
 
     def scoreBoard(self, board):
-
-        summation = 1
-        rowMultiplier = 1
-        for i, row in enumerate(board[:-1]):
-            rowMultiplier*=.90
-            for j, value in enumerate(row):
-                if value >0 and board[i+1][j] == 0:
-                    x=0
-                    summation +=2*rowMultiplier
-                    while board[i+1+x][j] ==0:
-                        summation +=1.1*rowMultiplier
-                        x+=1
-                #if value> 0 and board[i+1] == 0:
-                if value > 0:
-                    summation += 1.2*rowMultiplier
-        print(summation)
-        return 1/summation
+        return self.strategist.strategy1(board)
 
     def drop(self, board, stone, stonex, stoney):
         stoney+=1
@@ -62,7 +46,10 @@ class tetrisplayer(object):
             return join_matrixes(board, stone, (stonex, stoney))
         else:
             return self.drop(board, stone, stonex, stoney)
-        
+            
+    def gameover(self, score):
+        self.strategist.gameover(score)    
+    
     def printboard(self, board):
         for row in board:
             print(row)

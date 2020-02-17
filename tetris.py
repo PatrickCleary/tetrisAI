@@ -332,6 +332,7 @@ class TetrisApp(object):
 		while 1:
 			self.screen.fill((0,0,0))
 			if self.gameover:
+				self.player.gameover(self.score)
 				self.center_msg("""Game Over!\nYour score: %d
 Press space to continue""" % self.score)
 			else:
@@ -375,9 +376,18 @@ Press space to continue""" % self.score)
 						self.AImove()
 			dont_burn_my_cpu.tick(maxfps)
 
+def playTetris(Player):
+	App = TetrisApp(Player)
+	App.run()
+
+
 if __name__ == '__main__':
 	Player = TetrisAI.tetrisplayer()
 	
-	App = TetrisApp(Player)
-	App.run()
+	if len(sys.argv) ==2:
+		App = TetrisApp(None)
+		App.run()
+	else:
+		App = TetrisApp(Player)
+		App.run()
 	
