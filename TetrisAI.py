@@ -32,22 +32,29 @@ class tetrisplayer(object):
     
     def decidemove(self, board, stone, stonex, stoney, gameover):
         maxMove = self.getMoves(board, stone)
-        print(maxMove)
         if gameover:
             return (1000, 1000)
         return (maxMove[1], maxMove[2])
 
-       
 
     def scoreBoard(self, board):
-        rowvalues = [0]*len(board)
+
+        summation = 1
+        rowMultiplier = 1
         for i, row in enumerate(board[:-1]):
-            summation =0
-            for value in row:
-                if value != 0:
-                    summation+=1
-            rowvalues[i] = summation
-        return max(rowvalues)
+            rowMultiplier*=.90
+            for j, value in enumerate(row):
+                if value >0 and board[i+1][j] == 0:
+                    x=0
+                    summation +=2*rowMultiplier
+                    while board[i+1+x][j] ==0:
+                        summation +=1.1*rowMultiplier
+                        x+=1
+                #if value> 0 and board[i+1] == 0:
+                if value > 0:
+                    summation += 1.2*rowMultiplier
+        print(summation)
+        return 1/summation
 
     def drop(self, board, stone, stonex, stoney):
         stoney+=1

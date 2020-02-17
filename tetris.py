@@ -297,20 +297,19 @@ class TetrisApp(object):
 			my_event= pygame.event.Event(AIenter, value = 'SPACE')
 			pygame.event.post(my_event)
 		else:
+			for i in range(moves[1]):
+				my_event = pygame.event.Event(AIenter, value='UP')
+				pygame.event.post(my_event)
 			for i in range(numMoves):
-				print('left/right:', i, 'moves:', numMoves)
-				if(moves[0]>0):
+				if(moves[0]>3):
 					my_event = pygame.event.Event(AIenter, value='RIGHT')
 					pygame.event.post(my_event)
 				else:
 					my_event = pygame.event.Event(AIenter, value='LEFT')
 					pygame.event.post(my_event)
-			for i in range(moves[1]):
-				print('rotate', i)
-				my_event = pygame.event.Event(AIenter, value='UP')
-				pygame.event.post(my_event)
-			#my_event = pygame.event.Event(AIenter, value = 'RETURN')
-			#pygame.event.post(my_event)
+			
+			my_event = pygame.event.Event(AIenter, value = 'RETURN')
+			pygame.event.post(my_event)
 		numMoves =0
 
 	def run(self):
@@ -359,8 +358,6 @@ Press space to continue""" % self.score)
 
 
 			for event in pygame.event.get():
-				print(event)
-
 				if event.type == pygame.USEREVENT+1:
 					self.drop(False)
 				elif event.type == pygame.QUIT:
