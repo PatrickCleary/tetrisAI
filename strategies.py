@@ -2,16 +2,11 @@
 
 
 class strategist(object):
-    def __init__(self, rowMultiplierWeight, holeWeight, heightWeight):
-        self.rowMultiplierWeight = rowMultiplierWeight
-        self.holeWeight = holeWeight
-        self.heightWeight = heightWeight
+    def __init__(self, weights):
+        self.rowMultiplierWeight = weights[0]
+        self.holeWeight = weights[1]
+        self.heightWeight = weights[2]
         self.scores = []
-
-    def gameover(self, score):
-        self.scores.append(score)
-        print(score)
-
 
     def strategy1(self, board):
         summation = 1

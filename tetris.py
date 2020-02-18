@@ -46,7 +46,7 @@ import TetrisAI
 # The configuration
 cell_size =	18
 cols =		10
-rows =		22
+rows =		14
 maxfps = 	30
 
 
@@ -332,9 +332,9 @@ class TetrisApp(object):
 		while 1:
 			self.screen.fill((0,0,0))
 			if self.gameover:
-				self.player.gameover(self.score)
 				self.center_msg("""Game Over!\nYour score: %d
 Press space to continue""" % self.score)
+				return self.score
 			else:
 				if self.paused:
 					self.center_msg("Paused")
@@ -376,13 +376,15 @@ Press space to continue""" % self.score)
 						self.AImove()
 			dont_burn_my_cpu.tick(maxfps)
 
+
 def playTetris(Player):
 	App = TetrisApp(Player)
-	App.run()
+	return App.run()
+
 
 
 if __name__ == '__main__':
-	Player = TetrisAI.tetrisplayer()
+	Players = TetrisAI.tetrisplayer()
 	
 	if len(sys.argv) ==2:
 		App = TetrisApp(None)

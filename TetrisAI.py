@@ -24,8 +24,10 @@ def join_matrixes(mat1, mat2, mat2_off):
 
 class tetrisplayer(object):
 
-    def __init__(self, strategist):
+    def __init__(self, strategist, numGames):
         self.strategist = strategist    
+        self.numGames = numGames
+        self.gamesPlayed = 0
 
     def getmove(self, board, stone, stonex, stoney, gameover):
         return self.decidemove(board, stone, stonex, stoney, gameover)
@@ -33,7 +35,11 @@ class tetrisplayer(object):
     def decidemove(self, board, stone, stonex, stoney, gameover):
         maxMove = self.getMoves(board, stone)
         if gameover:
-            return (1000, 1000)
+            self.gamesPlayed +=1
+            if self.gamesPlayed == self.numGames:
+                return (-1000 , -1000)
+            else:
+                return (1000, 1000)
         return (maxMove[1], maxMove[2])
 
 
