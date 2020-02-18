@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     for i in range(numStrats):
         strat = (random.random()*1, random.random()*2, random.random()*2)
-        strat = (.95, 2, 1.2)
+        strat = (.95, 2, 1.8)
         stratsArray.append(strat)
         strategistArray.append(strategies.strategist(strat))
 
@@ -29,5 +29,4 @@ if __name__ == '__main__':
 
         strategistScoresArray.append(scoresArray)
     
-    for i in range(numStrats):
         print('strat = ', stratsArray[i][0],'-', stratsArray[i][1],'-', stratsArray[i][2], 'median=', median(strategistScoresArray[i]), 'average = ', mean(strategistScoresArray[i]) )
