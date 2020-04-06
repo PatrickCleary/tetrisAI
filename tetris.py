@@ -46,7 +46,7 @@ import TetrisAI
 # The configuration
 cell_size =	18
 cols =		10
-rows =		14
+rows =		27
 maxfps = 	30
 
 
